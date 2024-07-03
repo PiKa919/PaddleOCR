@@ -11,14 +11,14 @@ Global:
   pretrained_model:
   checkpoints:
   save_inference_dir:
-  use_visualdl: false
-  infer_img: ./doc/imgs_words/arabic/ar_2.jpg
-  character_dict_path: ppocr/utils/dict/arabic_dict.txt
+  use_visualdl: True
+  infer_img: ./doc/imgs_words/urdu/ur_2.jpg
+  character_dict_path: PaddleOCR/ppocr/utils/dict/ur_dict.txt
   max_text_length: &max_text_length 25
   infer_mode: false
   use_space_char: true
   distributed: true
-  save_res_path: ./output/rec/predicts_ppocrv3_arabic.txt
+  save_res_path: ./output/rec/urdu.txt
 
 
 Optimizer:
@@ -77,10 +77,10 @@ Metric:
 Train:
   dataset:
     name: SimpleDataSet
-    data_dir: ./train_data/
+    data_dir: UTRSet-Real/UTRSet-Real/train/
     ext_op_transform_idx: 1
     label_file_list:
-    - ./train_data/train_list.txt
+    - UTRSet-Real/UTRSet-Real/train/gt.txt
     transforms:
     - DecodeImage:
         img_mode: BGR
@@ -108,9 +108,9 @@ Train:
 Eval:
   dataset:
     name: SimpleDataSet
-    data_dir: ./train_data
+    data_dir: UTRSet-Real/UTRSet-Real/test/
     label_file_list:
-    - ./train_data/val_list.txt
+    - UTRSet-Real/UTRSet-Real/test/gt.txt
     transforms:
     - DecodeImage:
         img_mode: BGR

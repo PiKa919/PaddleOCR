@@ -121,7 +121,7 @@ class SimpleDataSet(Dataset):
             file_idx = self.data_idx_order_list[np.random.randint(self.__len__())]
             data_line = self.data_lines[file_idx]
             data_line = data_line.decode("utf-8")
-            substr = data_line.strip("\n").split(self.delimiter)
+            substr = data_line.strip("\t").split(self.delimiter)
             file_name = substr[0]
             file_name = self._try_parse_filename_list(file_name)
             label = substr[1]
@@ -141,13 +141,16 @@ class SimpleDataSet(Dataset):
                     continue
             ext_data.append(data)
         return ext_data
+        
 
     def __getitem__(self, idx):
         file_idx = self.data_idx_order_list[idx]
         data_line = self.data_lines[file_idx]
         try:
             data_line = data_line.decode("utf-8")
-            substr = data_line.strip("\n").split(self.delimiter)
+            substr = data_line.strip("\t").split(self.delimiter)
+            if len(substr) < 2:
+                raise ValueError(f"Line format incorrect or empty: {data_line}")
             file_name = substr[0]
             file_name = self._try_parse_filename_list(file_name)
             label = substr[1]
@@ -160,7 +163,7 @@ class SimpleDataSet(Dataset):
                 data["image"] = img
             data["ext_data"] = self.get_ext_data()
             outs = transform(data, self.ops)
-        except:
+        except Exception as e:
             self.logger.error(
                 "When parsing line {}, error happened with msg: {}".format(
                     data_line, traceback.format_exc()
@@ -248,7 +251,7 @@ class MultiScaleDataSet(SimpleDataSet):
         data_line = self.data_lines[file_idx]
         try:
             data_line = data_line.decode("utf-8")
-            substr = data_line.strip("\n").split(self.delimiter)
+            substr = data_line.strip("\t").split(self.delimiter)
             file_name = substr[0]
             file_name = self._try_parse_filename_list(file_name)
             label = substr[1]
